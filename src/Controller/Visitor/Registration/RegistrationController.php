@@ -7,6 +7,8 @@ use App\Entity\User;
 use App\Security\EmailVerifier;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
+use DateTimeImmutable;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\Mime\Address;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -42,7 +44,6 @@ class RegistrationController extends AbstractController
             // Initialisation la propriété password de l'utilisateur qui s'inscrit avec le mot de passe encodé
             $user->setPassword($passwordHashed);
 
-
             $entityManager->persist($user);
 
             $entityManager->flush();
@@ -75,7 +76,12 @@ class RegistrationController extends AbstractController
 
 
     #[Route('/verify/email', name: 'visitor.registration.verify_email')]
-    public function verifyUserEmail(Request $request, TranslatorInterface $translator, UserRepository $userRepository): Response
+    public function verifyUserEmail(
+        Request $request, 
+        TranslatorInterface $translator, 
+        UserRepository $userRepository, 
+        EntityManagerInterface $em
+    ): Response
     {
         $id = $request->query->get('id');
 
@@ -102,6 +108,12 @@ class RegistrationController extends AbstractController
 
             return $this->redirectToRoute('visitor.registration.register');
         }
+
+        // Initialisation de la date de vérification du compte par email
+        $user->setVerifiedAt(new DateTimeImmutable());
+        
+        $em->persist($user);
+        $em->flush();
 
         // @TODO Change the redirect on success and handle or remove the flash message in your templates
         $this->addFlash('success', 'Votre compte a bien été vérifié. Vous pouvez vous connecter.');
