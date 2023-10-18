@@ -74,7 +74,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         maxMessage: "Le mot de passe ne doit pas dépasser {{ limit }} caractères.",
     )]
     #[Assert\Regex(
-        pattern: "/^(?=.*[a-zà-ÿ])(?=.*[A-ZÀ-Ỳ])(?=.*[0-9])(?=.*[^a-zà-ÿA-ZÀ-Ỳ0-9])+$/",
+        pattern: "/^(?=.*[a-zà-ÿ])(?=.*[A-ZÀ-Ỳ])(?=.*[0-9])(?=.*[^a-zà-ÿA-ZÀ-Ỳ0-9]).{11,255}$/",
         match: true,
         message: "Le mot de passe doit contentir au moins une lettre miniscule, majuscule, un chiffre et un caractère spécial.",
     )]
