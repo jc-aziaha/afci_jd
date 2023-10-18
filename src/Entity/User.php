@@ -67,7 +67,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /** * @var string The hashed password */
     #[Assert\NotBlank(message: "Le mot de passe est obligatoire.")]
-
+    #[Assert\Length(
+        min: 12,
+        max: 255,
+        minMessage: "Le mot de passe doit contenir au minimum {{ limit }} caractères.",
+        maxMessage: "Le mot de passe ne doit pas dépasser {{ limit }} caractères.",
+    )]
+    #[Assert\Regex(
+        pattern: "/^(?=.*[a-zà-ÿ])(?=.*[A-ZÀ-Ỳ])(?=.*[0-9])(?=.*[^a-zà-ÿA-ZÀ-Ỳ0-9])+$/",
+        match: true,
+        message: "Le mot de passe doit contentir au moins une lettre miniscule, majuscule, un chiffre et un caractère spécial.",
+    )]
+    #[Assert\NotCompromisedPassword(message: 'Ce mot de passe est facilement piratable. Veuillez en choisir un autre.')]
     #[ORM\Column]
     private ?string $password = null;
 
