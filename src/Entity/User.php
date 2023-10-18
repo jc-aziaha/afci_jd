@@ -7,9 +7,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+
+
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[UniqueEntity(fields: ['email'], message: "Impossible de créer un compte avec cet email.")]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -17,21 +20,54 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
+
+    #[Assert\NotBlank(message: "Le prénom est obligatoire.")]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: "Votre prénom ne doit pas dépasser {{ limit }} caractères.",
+    )]
+    #[Assert\Regex(
+        pattern: "/^[0-9a-zA-Z-_' áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]+$/i",
+        match: true,
+        message: 'Veuillez entrer un prénom valide.',
+    )]
     #[ORM\Column(length: 255)]
     private ?string $firstName = null;
 
+
+    #[Assert\NotBlank(message: "Le nom est obligatoire.")]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: "Votre nom ne doit pas dépasser {{ limit }} caractères.",
+    )]
+    #[Assert\Regex(
+        pattern: "/^[0-9a-zA-Z-_' áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ]+$/i",
+        match: true,
+        message: 'Veuillez entrer un nom valide.',
+    )]
     #[ORM\Column(length: 255)]
     private ?string $lastName = null;
     
+
+    #[Assert\NotBlank(message: "L'email est obligatoire.")]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: "Votre email ne doit pas dépasser {{ limit }} caractères.",
+    )]
+    #[Assert\Email(
+        message: "Votre email {{ value }} n'est pas valide.",
+    )]
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
+
 
     #[ORM\Column]
     private array $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
+
+    /** * @var string The hashed password */
+    #[Assert\NotBlank(message: "Le mot de passe est obligatoire.")]
+
     #[ORM\Column]
     private ?string $password = null;
 
