@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{% block title %}{% endblock %}</title>
+        <title>{% block title %}{% endblock %} - Le blog de Jean Dupont</title>
         <meta name="description" content="{% block description %}{% endblock %}">
         <meta name="keywords" content="{% block keywords %}{% endblock %}">
 
@@ -166,7 +166,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link d-flex align-items-center gap-2" href="">
+                                <a class="nav-link d-flex align-items-center gap-2" href="{{path('admin.category.index')}}">
                                     <i class="fa-solid fa-folder"></i>
                                     Catégories
                                 </a>

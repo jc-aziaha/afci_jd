@@ -1,1 +1,9 @@
 {% extends "themes/base_admin.html.twig" %}
+
+{% block title %}Espace admin{% endblock %}
+
+{% block description %}Espace d'administration de Jean Dupont{% endblock %}
+
+{% block main %}
+    <h1 class="text-center my-3 display-5">Hello {{app.user.firstName}} {{app.user.lastName}}</h1>
+{% endblock %}
