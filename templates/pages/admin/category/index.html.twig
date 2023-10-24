@@ -43,7 +43,10 @@
                             <td>{{category.updatedAt|date("m/d/Y")}}</td>
                             <td>
                                 <a title="Modifier {{category.name}}"  href="{{path('admin.category.edit', {'id':category.id})}}" class="mx-2 text-secondary"><i class="fas fa-edit"></i></a>
-                                <a title="Supprimer {{category.name}}" href="" class="mx-2 text-danger"><i class="fa-solid fa-trash-can"></i></a>
+                                <a onclick="event.preventDefault(); confirm('Confirmer la suppression?') && document.querySelector('#delete-category-{{category.id}}-form').submit();" title="Supprimer {{category.name}}" href="" class="mx-2 text-danger"><i class="fa-solid fa-trash-can"></i></a>
+                                <form method="POST" action="{{path('admin.category.delete', {'id':category.id})}}" id="delete-category-{{category.id}}-form">
+                                    <input type="hidden" name="csrf_token" value="{{csrf_token('delete-category'~category.id)}}">
+                                </form>
                             </td>
                         </tr>
                     {% endfor %}
