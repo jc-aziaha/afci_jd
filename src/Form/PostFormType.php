@@ -24,6 +24,7 @@ class PostFormType extends AbstractType
             
                 // uses the Category.name property as the visible option string
                 'choice_label' => 'name',
+                'placeholder' => 'Choisissez une catégorie',
             ])
             ->add('imageFile', VichImageType::class)
             ->add('content', TextareaType::class)

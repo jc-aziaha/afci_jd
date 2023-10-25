@@ -2,11 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\PostRepository;
+use App\Entity\Category;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\PostRepository;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 
@@ -15,36 +17,69 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 class Post
 {
+
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+
     #[ORM\ManyToOne(inversedBy: 'posts')]
     private ?User $user = null;
 
+
+    #[Assert\NotBlank(message: "Le catégorie est obligatoire.")]
+    #[Assert\Type(
+        type: Category::class,
+        message: "Cette catégorie n'est pas valide.",
+    )]
     #[ORM\ManyToOne(inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
 
+
+
+    #[Assert\NotBlank(message: "Le titre est obligatoire.")]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: 'Le titre ne doit pas dépasser {{ limit }} caractères.',
+    )]
     #[ORM\Column(length: 255)]
     private ?string $title = null;
+
+
 
     #[ORM\Column(length: 255)]
     private ?string $slug = null;
 
+
+
     #[ORM\Column]
     private ?bool $isVerified = null;
 
+
+
     // NOTE: This is not a mapped field of entity metadata, just a simple property.
+    #[Assert\File(
+        maxSize: '2048k',
+        extensions: ['png', 'jpg', 'jpeg', 'webp'],
+        maxSizeMessage: "La taille de l'image est trop grande. Veuillez vous limiter à 2 Mo.",
+        extensionsMessage: "Le format n'est pas valide. Seuls ces formats sont autorisés: png, jpg, jpeg, webp."
+    )]
     #[Vich\UploadableField(mapping: 'posts_images', fileNameProperty: 'image')]
     private ?File $imageFile = null;
+
+
 
     #[ORM\Column(length: 255, nullable: true, unique: true)]
     private ?string $image = null;
 
+
+    #[Assert\NotBlank(message: "Le contenu de l'article est obligatoire.")]
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
+
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $createdAt = null;
