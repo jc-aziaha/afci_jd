@@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class CategoryController extends AbstractController
 {
 
+    
     #[Route('/admin/category/list', name: 'admin.category.index', methods:['GET'])]
     public function index(CategoryRepository $categoryRepository): Response
     {

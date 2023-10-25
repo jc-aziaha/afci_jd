@@ -2,9 +2,11 @@
 
 namespace App\Controller\Admin\Post;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\Post;
+use App\Form\PostFormType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class PostController extends AbstractController
 {
@@ -18,8 +20,12 @@ class PostController extends AbstractController
     #[Route('/admin/post/create', name: 'admin.post.create', methods:['GET','POST'])]
     public function create(): Response
     {
-        return $this->render("pages/admin/post/create.html.twig");
+        $post = new Post();
+
+        $form = $this->createForm(PostFormType::class, $post);
+
+        return $this->render("pages/admin/post/create.html.twig", [
+            "form" => $form->createView()
+        ]);
     }
-
-
 }
