@@ -5,6 +5,7 @@ namespace App\Controller\Admin\Post;
 use App\Entity\Post;
 use App\Form\PostFormType;
 use App\Repository\PostRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -68,4 +69,47 @@ class PostController extends AbstractController
             "form" => $form->createView()
         ]);
     }
+
+
+    #[Route('/admin/post/{id}/publish', name: 'admin.post.publish', methods:['DELETE'])]
+    public function publish(Post $post, Request $request, EntityManagerInterface $em): Response
+    {
+        // Si le jéton de sécurité(token) qui permet de se protéger contre les failles de sécurité CSRF est valide,
+        if ( $this->isCsrfTokenValid("publish_post_".$post->getId(), $request->request->get('csrf_token')))
+        {
+            // Si l'article n'est pas encore publié,
+            if ( $post->isIsPublished() === false )
+            {
+                // Publions-le,
+                $post->setIsPublished(true);
+
+                // Mettons à jour la date de publication
+                $post->setPublishedAt(new DateTimeImmutable());
+
+                // Générons le message flash de succès de l'opération
+                $this->addFlash('success', "L'article a été publié");
+            }
+            else // Dans le cas contraire
+            {
+                // Retirons-le de la liste des publications
+                $post->setIsPublished(false);
+
+                // Rendons nulle la date de publication
+                $post->setPublishedAt(null);
+
+                // Générons le message flash de succès de l'opération
+                $this->addFlash('success', "L'article a été retiré de la liste des publications.");
+            }
+
+            // Demandons au manager des entités de préparer la requête de modification.
+            $em->persist($post);
+
+            // Exécutons la requête.
+            $em->flush();
+
+            // Effectuer une redirection vers la page d'accueil de la section des articles.
+            return $this->redirectToRoute('admin.post.index');
+        }
+    }
+
 }
