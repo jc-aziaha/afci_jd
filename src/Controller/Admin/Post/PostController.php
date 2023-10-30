@@ -71,7 +71,7 @@ class PostController extends AbstractController
     }
 
 
-    #[Route('/admin/post/{id}/publish', name: 'admin.post.publish', methods:['DELETE'])]
+    #[Route('/admin/post/{id}/publish', name: 'admin.post.publish', methods:['PUT'])]
     public function publish(Post $post, Request $request, EntityManagerInterface $em): Response
     {
         // Si le jéton de sécurité(token) qui permet de se protéger contre les failles de sécurité CSRF est valide,
@@ -124,4 +124,15 @@ class PostController extends AbstractController
     }
 
 
+    #[Route('/admin/post/{id}/edit', name: 'admin.post.edit', methods:['GET'])]
+    public function edit(Post $post): Response
+    {
+
+        $form = $this->createForm(PostFormType::class, $post);
+
+        return $this->render("pages/admin/post/edit.html.twig", [
+            'form' => $form->createView(),
+            'post' => $post
+        ]);
+    }
 }

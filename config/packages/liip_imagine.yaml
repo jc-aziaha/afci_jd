@@ -11,8 +11,7 @@ liip_imagine:
         cache : ~
 
         # the name of the "filter set"
-        post_thumb :
-
+        admin_post_index_thumb :
             # adjust the image quality to 75%
             quality : 100
 
@@ -22,6 +21,22 @@ liip_imagine:
                 # create a thumbnail: set size to 120x90 and use the "outbound" mode
                 # to crop the image when the size ratio of the input differs
                 thumbnail  : { size : [200, 150] }
+
+                # create a 2px black border: center the thumbnail on a black background
+                # 4px larger to create a 2px border around the final image
+                # background : { size : [204, 104], position : center, color : '#FF0000' }
+
+        
+        admin_post_edit_thumb :
+            # adjust the image quality to 75%
+            quality : 100
+
+            # list of transformations to apply (the "filters")
+            filters :
+
+                # create a thumbnail: set size to 120x90 and use the "outbound" mode
+                # to crop the image when the size ratio of the input differs
+                thumbnail  : { size : [200, 200] }
 
                 # create a 2px black border: center the thumbnail on a black background
                 # 4px larger to create a 2px border around the final image

@@ -41,7 +41,7 @@
 
                         <td>
                             {% if post.image %}
-                                <img alt="{{post.slug}}" src="{{ vich_uploader_asset(post, 'imageFile') | imagine_filter('post_thumb') }}">
+                                <img alt="{{post.slug}}" src="{{ vich_uploader_asset(post, 'imageFile') | imagine_filter('admin_post_index_thumb') }}">
                             {% else %}
                                 <p class="text-center">---</p>
                             {% endif %}
@@ -59,7 +59,7 @@
                             {% endif %}
                             <form method="POST" action="{{path('admin.post.publish', {'id':post.id})}}">
                                 <input type="hidden" name="csrf_token" value="{{csrf_token('publish_post_'~post.id)}}">
-                                <input type="hidden" name="_method" value="DELETE">
+                                <input type="hidden" name="_method" value="PUT">
                                 <div class="form-check form-switch d-flex justify-content-center">
                                     <input {{ post.isPublished ? 'checked' : '' }} onclick="return confirm('Confirmer cette action?');" onchange="this.form.submit();" class="form-check-input" type="checkbox" role="switch" id="switch_{{post.id}}">
                                     <label class="form-check-label" for="switch_{{post.id}}"></label>
@@ -74,8 +74,8 @@
                         <td>{{post.createdAt|date('d-m-Y')}}</td>
                         <td>{{post.updatedAt|date('d-m-Y')}}</td>
                         <td>
-                            <a title="Modifier {{post.title}}"  href="" class="mx-2 text-secondary"><i class="fas fa-edit"></i></a>
-                            <a onclick="event.preventDefault(); confirm('Confirmer la suppression?') && document.querySelector('#delete-post-{{post.id}}-form').submit();" title="Supprimer {{post.title}}" href="#" class="mx-2 text-danger"><i class="fa-solid fa-trash-can"></i></a>
+                            <a title="Modifier {{post.title}}" href="{{path('admin.post.edit', {'id':post.id})}}" class="mx-1 text-secondary"><i class="fas fa-edit"></i></a>
+                            <a onclick="event.preventDefault(); confirm('Confirmer la suppression?') && document.querySelector('#delete-post-{{post.id}}-form').submit();" title="Supprimer {{post.title}}" href="#" class="mx-1 text-danger"><i class="fa-solid fa-trash-can"></i></a>
                             <form method="POST" action="" id="delete-post-{{post.id}}-form">
                                 <input type="hidden" name="csrf_token" value="{{csrf_token('delete-post'~post.id)}}">
                                 <input type="hidden" name="_method" value="DELETE">
