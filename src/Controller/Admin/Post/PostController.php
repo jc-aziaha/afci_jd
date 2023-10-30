@@ -124,15 +124,47 @@ class PostController extends AbstractController
     }
 
 
-    #[Route('/admin/post/{id}/edit', name: 'admin.post.edit', methods:['GET'])]
-    public function edit(Post $post): Response
+    #[Route('/admin/post/{id}/edit', name: 'admin.post.edit', methods:['GET', 'PUT'])]
+    public function edit(Post $post, Request $request, EntityManagerInterface $em): Response
     {
 
-        $form = $this->createForm(PostFormType::class, $post);
+        $form = $this->createForm(PostFormType::class, $post, [
+            'method' => "PUT"
+        ]);
+
+        $form->handleRequest($request);
+
+        if ( $form->isSubmitted() && $form->isValid() ) 
+        {
+            $em->persist($post); 
+
+            $em->flush();
+
+            $this->addFlash('success', "L'article a été modifié");
+
+            return $this->redirectToRoute('admin.post.index');
+        }
 
         return $this->render("pages/admin/post/edit.html.twig", [
             'form' => $form->createView(),
             'post' => $post
         ]);
     }
+
+
+    #[Route('/admin/post/{id}/delete', name: 'admin.post.delete', methods:['DELETE'])]
+    public function delete(Post $post, Request $request, EntityManagerInterface $em): Response
+    {
+        if ( $this->isCsrfTokenValid("delete-post".$post->getId(), $request->request->get('csrf_token')) ) 
+        {
+            $em->remove($post);
+
+            $em->flush();
+
+            $this->addFlash('success', "L'article a été supprimé.");
+        }
+
+        return $this->redirectToRoute('admin.post.index');
+    }
+
 }
