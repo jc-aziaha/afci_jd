@@ -1,0 +1,26 @@
+{% extends "themes/base_admin.html.twig" %}
+
+{% block title %}{{post.title}}{% endblock %}
+
+{% block description %}{{post.title}}{% endblock %}
+
+{% block main %}
+
+    {% if post.image %}
+        <div class="container text-center mt-5">
+            <img alt="{{post.slug}}" src="{{ vich_uploader_asset(post, 'imageFile') }}" class="img-fluid">
+        </div>
+    {% endif %}
+        
+
+
+    <div class="container my-5">
+        <h1 class="text-center my-3 display-5">{{post.title}}</h1>
+
+        <div>
+            {{post.content|raw}}
+        </div>
+    
+    </div>
+{% endblock %}
+

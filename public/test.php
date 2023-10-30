@@ -1,21 +1,15 @@
 <?php
 
-    $heure = 14;
+    $tab = [
+        'key1' => 'Lundi',
+    ];
 
-    if ($heure == 14)
+
+    // foreach ($tab as $key => $value) {
+    //     # code...
+    // }
+
+    foreach ($tab as $value) 
     {
-        echo $heure;
+        echo $value . "\n";
     }
-    
-    return "hello";
-
-
-    // if ($heure > 14)
-    // {
-    //     return $heure;
-    // }
-    // else
-    // {
-    //     return "hello";
-    // }
-    

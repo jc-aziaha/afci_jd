@@ -112,4 +112,16 @@ class PostController extends AbstractController
         }
     }
 
+
+    #[Route('/admin/post/{id}/show', name: 'admin.post.show', methods:['GET'])]
+    public function show(string $id, PostRepository $postRepository): Response
+    {
+        $post = $postRepository->findOneBy(['id' => $id]); //WHERE id = :id
+
+        return $this->render("pages/admin/post/show.html.twig", [
+            "post" => $post
+        ]);
+    }
+
+
 }
